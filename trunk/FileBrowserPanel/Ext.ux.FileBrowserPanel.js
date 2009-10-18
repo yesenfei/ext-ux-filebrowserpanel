@@ -175,13 +175,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 					{name: 'date_modified', type: 'date', dateFormat: 'timestamp'},
 					{name: 'row_class', type: 'string', defaultValue: 'ux-filebrowser-icon-unknown-file'},
 					{name: 'thumbnail', type: 'string', defaultValue: this.defaultThumbnailImage}
-				]/*,
-				listeners: {
-					beforeload: {
-						fn: this.onGridStoreBeforeLoad,
-						scope: this
-					}
-				}*/
+				]
 			}),
 			selModel: new Ext.grid.RowSelectionModel({
 				listeners: {
@@ -968,28 +962,6 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 		treeLoader.baseParams.path = node.getPath('text');
 	}, // eo function onTreeLoaderBeforeLoad
 
-	/**
-	 * Event handler for when the grid is about to load new data
-	 * Appends the folder path of the selected node to the request
-	 *
-	 * @private
-	 * @param	{Ext.data.JsonStore}	store	The store object
-	 * @param	{Object}				opts	Loading options
-	 * @returns	{Void}
-	 */
-	onGridStoreBeforeLoad: function (store, opts) {
-		/*
-		var node;
-		store.baseParams.action = 'get-files';
-		
-		node = this.tree.getSelectionModel().getSelectedNode();
-		
-		//store.baseParams.path = this.tree.getSelectionModel().getSelectedNode().getPath('text');
-		store.setBaseParam('path', node.getPath('text'));
-		console.log('gridbeforeload');
-		console.log(store.baseParams);
-		*/
-	}, // eo function onGridStoreBeforeLoad
 	/**
 	 * Event handler for when the tree is renderer
 	 * Selects the root node, causing the files in the root to be loaded

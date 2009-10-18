@@ -15,7 +15,7 @@ switch($action) {
 		$iterator = new DirectoryIterator($browsePath);
 		
 		foreach($iterator as $item) {
-			if(!$item->isDot() && $item->isDir()) {
+			if(!$item->isDot() && $item->isDir() && ($item->getFilename() != '.svn')) {
 				$dirs[(string) $item] = array(
 					'text' => (string) $item,
 					'leaf' => false
