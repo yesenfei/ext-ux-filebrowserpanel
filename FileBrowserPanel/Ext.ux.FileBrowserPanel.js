@@ -7,7 +7,7 @@
  * FileBrowserPanel
  *
  * @author		Rocco Bruyn
- * @version		0.1.1
+ * @version		0.1.2
  *
  * @licence		GNU General Public License v3
  * 				http://www.gnu.org/licenses/lgpl.html
@@ -24,7 +24,45 @@ Ext.namespace('Ext.ux');
  */
 Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 	/**
-	 * @cfg {String} dataUrl The URL that is used to process data (required)
+	 * @cfg {String} getFoldersUrl The URL to fetch folders
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} getFilesUrl The URL to fetch files
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} createFolderUrl The URL to create a folder
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} renameFolderUrl The URL to rename folders
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} deleteFolderUrl The URL to delete folders
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} renameFileUrl The URL to rename files
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} deleteFileUrl The URL to delete files
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} downloadFileUrl The URL to download files
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} moveFileUrl The URL to move files
+	 * Takes precedence over dataUrl
+	 */
+	/**
+	 * @cfg {String} dataUrl The URL that is used to process requests
+	 * Required if not all URL options are set
+	 * Defaults to: 'filebrowserpanel.php'
 	 */
 	dataUrl: 'filebrowserpanel.php',
 	/**
@@ -59,7 +97,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				onNodeDrop: this.onTreeNodeDrop.createDelegate(this)
 			},
 			loader: new Ext.tree.TreeLoader({
-				url: this.dataUrl,
+				url: this.getFoldersUrl || this.dataUrl,
 				listeners: {
 					beforeload: {
 						fn: this.onTreeLoaderBeforeLoad,
@@ -166,7 +204,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				}
 			]),
 			store: new Ext.data.JsonStore({
-				url: this.dataUrl,
+				url: this.getFilesUrl || this.dataUrl,
 				root: 'data',
 				fields: [
 					{name: 'name', type: 'string'},
@@ -1291,6 +1329,11 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 					this.fireEvent('createfolder', this, opts, o);
 				}
 
+				// change name of the node if it was changed on the server
+				if ((null !== o.serverName) && Ext.isString(o.serverName)) {
+					opts.node.setText(o.serverName);
+				}
+				
 				// remove flag
 				delete opts.node.attributes.isNew;
 				break;
@@ -1299,6 +1342,11 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				// fire renamefolder
 				if (true !== this.eventsSuspended) {
 					this.fireEvent('renamefolder', this, opts, o);
+				}
+				
+				// change name of the node if it was changed on the server
+				if ((null !== o.serverName) && Ext.isString(o.serverName)) {
+					opts.node.setText(o.serverName);
 				}
 				break;
 
@@ -1317,6 +1365,11 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				// fire renamefile event
 				if (true !== this.eventsSuspended) {
 					this.fireEvent('renamefile', this, opts, o);
+				}
+
+				// change name of the record if it was changed on the server
+				if ((null !== o.serverName) && Ext.isString(o.serverName)) {
+					opts.record.set('name', o.serverName);
 				}
 
 				// commit the change in the record
@@ -1471,7 +1524,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 
 		// send request to server
 		Ext.Ajax.request({
-			url: this.dataUrl,
+			url: this.createFolderUrl || this.dataUrl,
 			node: node,
 			callback: this.actionCallback,
 			scope: this,
@@ -1500,7 +1553,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 
 		// send request to server
 		Ext.Ajax.request({
-			url: this.dataUrl,
+			url: this.renameFolderUrl || this.dataUrl,
 			node: node,
 			newName: newName,
 			oldName: oldName,
@@ -1542,7 +1595,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				if (buttonId === 'yes') {
 					// send request to server
 					Ext.Ajax.request({
-						url: this.dataUrl,
+						url: this.deleteFolderUrl || this.dataUrl,
 						node: node,
 						callback: this.actionCallback,
 						scope: this,
@@ -1575,7 +1628,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 
 		// send request to server
 		Ext.Ajax.request({
-			url: this.dataUrl,
+			url: this.renameFileUrl || this.dataUrl,
 			record: record,
 			newName: newName,
 			oldName: oldName,
@@ -1638,7 +1691,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				if (buttonId === 'yes') {
 					// send request to server
 					Ext.Ajax.request({
-						url: this.dataUrl,
+						url: this.deleteFileUrl || this.dataUrl,
 						callback: this.actionCallback,
 						scope: this,
 						params: params
@@ -1692,7 +1745,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 		form = Ext.DomHelper.append(document.body, {
 			tag: 'form',
 			method: 'post',
-			action: this.dataUrl,
+			action: this.downloadFileUrl || this.dataUrl,
 			target: id
 		});
 
@@ -1760,7 +1813,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 
 		// send request to server
 		Ext.Ajax.request({
-			url: this.dataUrl,
+			url: this.moveFileUrl || this.dataUrl,
 			scope: this,
 			callback: this.actionCallback,
 			params: params
@@ -1773,7 +1826,7 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 	 * @returns	{Void}
 	 */
 	refreshGrid: function () {
-		this.grid.getStore().load();
+		this.grid.getStore().reload();
 	}, // eo function refreshGrid
 
 	/**
