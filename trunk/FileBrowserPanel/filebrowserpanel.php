@@ -151,8 +151,8 @@ switch($action) {
 	case 'rename-file':
 		$requestedPath = $_POST['path'];
 		$oldName = $_POST['oldName'];
-		$newName = $_POST['newName'];
-		$renamePath = preg_replace('/^\/Root\/?/', $basePath, $requestedPath);
+		$newName = preg_replace('/[^a-z0-9_\-\.]/i', '-', $_POST['newName']);
+		$renamePath = preg_replace('/^\/Root\/?/', $basePath, $requestedPath) . DIRECTORY_SEPARATOR;
 		
 		$success = true;
 		$message = '';
@@ -179,8 +179,9 @@ switch($action) {
 		}
 		
 		$data = array(
-			'success'	=> $success,
-			'message'	=> $message
+			'success'	 => $success,
+			'message'	 => $message,
+			'serverName' => $newName
 		);
 	break;
 
@@ -317,7 +318,11 @@ switch($action) {
 
 	case 'create-folder':
 		$requestedPath = $_POST['path'];
-		$createPath = preg_replace('/^\/Root\/?/', $basePath, $requestedPath);
+		
+		$folderName = basename($requestedPath);
+		$newName = preg_replace('/[^a-z0-9_\-\.]/i', '-', $folderName);
+		$newPath = dirname($requestedPath) . DIRECTORY_SEPARATOR . $newName;
+		$createPath = preg_replace('/^\/Root\/?/', $basePath, $newPath);
 		
 		$success = true;
 		$message = '';
@@ -345,15 +350,16 @@ switch($action) {
 		}
 		
 		$data = array(
-			'success'	=> $success,
-			'message'	=> $message
+			'success'	 => $success,
+			'message'	 => $message,
+			'serverName' => $newName
 		);
 	break;
 
 	case 'rename-folder':
 		$requestedPath = $_POST['path'];
 		$oldName = $_POST['oldName'];
-		$newName = $_POST['newName'];
+		$newName = preg_replace('/[^a-z0-9_\-\.]/i', '-', $_POST['newName']);
 		$renamePath = preg_replace('/^\/Root\/?/', $basePath, $requestedPath) . '/';
 
 		$success = true;
@@ -381,8 +387,9 @@ switch($action) {
 		}
 		
 		$data = array(
-			'success'	=> $success,
-			'message'	=> $message
+			'success'	 => $success,
+			'message'	 => $message,
+			'serverName' => $newName
 		);
 	break;
 

@@ -47,7 +47,7 @@
 <body>
     <h1>Ext.ux.FileBrowserPanel</h1>
     <p>
-        FileBrowserPanel is an extension that allows a user to browser through files
+        FileBrowserPanel is an extension that allows a user to browse through files
         and perform some common operations on them.<br>
         These include: create/delete/rename folders and delete/rename/move/download files.<br>
         Uploading of files is not directly implemented. There are numerous ways to do this,
@@ -63,9 +63,55 @@
         In addition to those, the following are added.
     </p>
     <dl>
+    	<dt>getFoldersUrl</dt>
+		<dd>
+			The URL to fetch folders<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>getFilesUrl</dt>
+		<dd>
+			The URL to fetch files<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>createFolderUrl</dt>
+		<dd>
+			The URL to create a folder<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>renameFolderUrl</dt>
+		<dd>
+			The URL to rename folders<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>deleteFolderUrl</dt>
+		<dd>
+			The URL to delete folders<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>renameFileUrl</dt>
+		<dd>
+			The URL to rename files<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>deleteFileUrl</dt>
+		<dd>
+			The URL to delete files<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>downloadFileUrl</dt>
+		<dd>
+			The URL to download files<br>
+			Takes precedence over dataUrl
+		</dd>
+    	<dt>moveFileUrl</dt>
+		<dd>
+			The URL to move files<br>
+			Takes precedence over dataUrl
+		</dd>
         <dt>dataUrl</dt>
         <dd>
             The url that will be used to send/receive data to/from the server.<br>
+			Required if not all URL options are set<br>
             Defaults to: filebrowserpanel.php
         </dd>
         <dt>defaultThumbnailImage</dt>
@@ -354,6 +400,8 @@ var viewport = new Ext.Viewport({
 {
     success: true|false,                        // Boolean indication if action was successful
     message: "Some sort of feedback message"    // Optional message with error or feedback
+    serverName: "FolderName"                    // Optional name of the folder as created on the server 
+                                                   so any changes by eg. filtering can be reflected in the UI
 }
     </pre>
     
@@ -370,6 +418,8 @@ var viewport = new Ext.Viewport({
 {
     success: true|false,                        // Boolean indication if action was successful
     message: "Some sort of feedback message"    // Optional message with error or feedback
+    serverName: "FolderName"                    // Optional name of the folder as renamed on the server 
+                                                   so any changes by eg. filtering can be reflected in the UI
 }
     </pre>
     
@@ -400,6 +450,8 @@ var viewport = new Ext.Viewport({
 {
     success: true|false,                        // Boolean indication if action was successful
     message: "Some sort of feedback message"    // Optional message with error or feedback
+    serverName: "FileName"                      // Optional name of the file as renamed on the server 
+                                                   so any changes by eg. filtering can be reflected in the UI
 }
     </pre>
     
