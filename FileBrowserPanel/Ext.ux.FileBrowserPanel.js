@@ -1435,6 +1435,9 @@ Ext.ux.FileBrowserPanel = Ext.extend(Ext.Panel, {
 				if (true !== this.eventsSuspended) {
 					this.fireEvent('deletefolderfailed', this, opts, o);
 				}
+				
+				// reload the node
+				opts.node.getOwnerTree().getLoader().load(opts.node);
 				break;
 
 			case 'rename-file':
